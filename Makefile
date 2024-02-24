@@ -1,6 +1,6 @@
 CFLAGS=-Wall -Werror -std=gnu99 -pedantic -ggdb3
-OBJS=test.o deck.o eval.o cards.o hash.o input.o future.o
-PROGRAM=test
+OBJS=main.o deck.o eval.o cards.o hash.o input.o future.o
+PROGRAM=main
 
 $(PROGRAM): $(OBJS)
 	gcc $(CFLAGS) -o $@ $(OBJS)

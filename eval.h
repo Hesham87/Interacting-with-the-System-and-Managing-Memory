@@ -20,7 +20,7 @@ unsigned get_largest_element(unsigned * arr, size_t n);
 size_t get_match_index(unsigned * match_counts, size_t n,unsigned n_of_akind);
 ssize_t  find_secondary_pair(deck_t * hand, unsigned * match_counts, size_t match_idx);
 int is_n_length_straight_at(deck_t * hand, size_t index, suit_t fs, int n);
-int is_ace_low_straight_at(deck_t * hand, size_t index, suit_t fs, int n);
+int is_ace_low_straight_at(deck_t * hand, size_t index, suit_t fs);
 int is_straight_at(deck_t * hand, size_t index, suit_t fs);
 hand_eval_t build_hand_from_match(deck_t * hand, unsigned n, hand_ranking_t what, size_t idx);
 unsigned * get_match_counts(deck_t * hand);
