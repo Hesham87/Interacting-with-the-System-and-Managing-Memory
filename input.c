@@ -39,11 +39,12 @@ deck_t * hand_from_string(const char * str, future_cards_t * fc){
     }
     if(!drawing && card_counter < 5){
         fprintf(stderr, "no less than 5 cards in a hand are allowed, found %d\n", card_counter);
-        free(fc->decks);
+        free_future_cards(fc);
         free_deck(deck);
         free(str_dub);
         return NULL;
     }
+    free(str_dub);
     return deck;
 }
 
@@ -66,6 +67,7 @@ deck_t ** read_input(FILE * f, size_t * n_hands, future_cards_t * fc){
                 hand_counter = 0;
                 return NULL;
             }
+            free(linep);
             linep = NULL;
         }
         *n_hands = hand_counter;

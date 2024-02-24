@@ -88,7 +88,20 @@ int main(int argc,char **argv){
             printf("\n");
         }
         printf("_____________________________\n");
+        for(int i = 0; i < *n_draws; i++){
+            free_deck(deck[i]);
+        }
+        free(deck);
     }
+    for(int i = 0; i < *n_hands; i++){
+        free_deck(hands[i]);
+    }
+    free(hands);
+    free(n_hands);
+    free(n_draws);
+    free_future_cards(fc);
+    fclose(f_hands);
+    fclose(f_draws);
     //print_hand(deck);
     return 0;
 
