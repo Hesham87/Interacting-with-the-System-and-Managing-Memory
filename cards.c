@@ -53,19 +53,24 @@ const char * ranking_to_string(hand_ranking_t r) {
 
 char value_letter(card_t c) {
     assert(c.value >=2 && c.value <= VALUE_ACE);
+    //printf("hello8\n");
     if (c.value >=2 && c.value <= 9) {
+        //printf("hello9\n");
         return '0' + c.value;
     }
     switch(c.value) {
         case 10:
+            //printf("hello9\n");
             return '0';
         case VALUE_JACK:
+            //printf("hello9\n");
             return 'J';
         case VALUE_QUEEN:
             return 'Q';
         case VALUE_KING:
             return 'K';
         case VALUE_ACE:
+            //printf("hello9\n");
             return 'A';
         default:
             fprintf(stderr, "value_letter: invalid value (%d)\n", c.value);
@@ -74,7 +79,10 @@ char value_letter(card_t c) {
 }
 
 unsigned value_from_letter(char value_let) {
-    assert(strchr(value_letters, value_let));
+    if(!strchr(value_letters, value_let)){
+        printf("%c\n", value_let);
+        assert(strchr(value_letters, value_let));
+    }
     if (value_let > '0' && value_let <= '9') {
         return value_let - '0';
     } else {
@@ -116,16 +124,25 @@ suit_t suit_from_letter(char suit_let) {
 
 char suit_letter(card_t c) {
     assert_card_valid(c);
+    //printf("hello6\n");
     if (c.suit < 0 || c.suit >= NUM_SUITS) {
         fprintf(stderr, "suit_letter: invalid suit (%d)\n", c.suit);
         exit(EXIT_FAILURE);
     }
+    //printf("hello7\n");
     return suit_letters[c.suit];   
 }
 
 void print_card(card_t c) {
-    assert_card_valid(c);
-    printf("%c%c", value_letter(c), suit_letter(c));
+    if(!is_empty_card(&c)){
+        assert_card_valid(c);
+        //printf("hello4\n");
+        printf("%c%c", value_letter(c), suit_letter(c));
+        //printf("hello5\n");
+    }
+    else{
+        printf("?%d", c.suit);
+    }
 }
 
 void fprint_card(FILE * f, card_t c) {

@@ -5,85 +5,72 @@
 #include <string.h>
 #include "input.h"
 
-void strip_newline(char * str) {
-  char * p = strchr(str, '\n');
-  if (p != NULL) {
-    *p = '\0';
-  }
+bool drawing = false;
+deck_t ** read_input_drawing(FILE * f, size_t * n_hands, future_cards_t * fc){
+    drawing = true;
+    deck_t** deck = read_input(f, n_hands, fc);
+    drawing = false;
+    return deck;
 }
 
 deck_t * hand_from_string(const char * str, future_cards_t * fc){
-    char *token;
-    card_t * ptr_c;
-    card_t c;
-    deck_t * deck = malloc(sizeof(*deck));
-
+    char* card_letters;
+    char* str_dub = strdup(str);
+    str_dub = strtok(str_dub, "\n");   //removing new line character if it exists
+    card_letters = strtok(str_dub, " ");
+    deck_t* deck = malloc(sizeof(*deck));
     deck->n_cards = 0;
     deck->cards = NULL;
-
-    /* get the first token */
-    char s[2] = " ";
-    char * hand_str = strdup(str); //can't call strtok on a const char *
-    strip_newline(hand_str);
-    token = strtok(hand_str, s);
-    int card_count = 0;
-    /* walk through other tokens */
-    while( token != NULL ) {
-        if(token[0] == '?'){
-            //printf("index: %s\n", token);
-            ptr_c = add_empty_card(deck);
-            size_t index = strtol(&token[1], NULL, 0);
-            add_future_card(fc, index, ptr_c);
+    int card_counter = 0;
+    while(card_letters != NULL){
+        card_counter++;
+        if(card_letters[0] == '?'){
+            card_t* card_ptr = add_empty_card(deck);
+            card_letters[strlen(card_letters)] = '\0';
+            size_t index = atoi(++card_letters);
+            add_future_card(fc, index, card_ptr); 
         }
         else{
-            //printf("token: %s token[0]: %c token[1]: %c\n", token, token[0], token[1]);
-            assert(strlen(token) == 2);
-            c = card_from_letters(token[0], token[1]);
-            add_card_to(deck, c);
+            card_t card = card_from_letters(card_letters[0], card_letters[1]);
+            add_card_to(deck, card);
         }
-        card_count++;
-        token = strtok(NULL, s);
+        
+        card_letters = strtok(NULL, " ");
     }
-    if(fc != NULL && card_count < 5) { // fc set to NULL means we're reading draws, not hands
-        fprintf(stderr, "At least five cards per hand needed. %d cards found.\n", card_count);
-    
-        for (int i=0; i < fc->n_decks; i++) {
-            if (fc->decks[i].n_cards > 0) {
-                free(fc->decks[i].cards);
-                fc->decks[i].cards = NULL;
-            }
-        }
+    if(!drawing && card_counter < 5){
+        fprintf(stderr, "no less than 5 cards in a hand are allowed, found %d\n", card_counter);
         free(fc->decks);
         free_deck(deck);
-        free(hand_str);
+        free(str_dub);
         return NULL;
     }
     return deck;
 }
 
 deck_t ** read_input(FILE * f, size_t * n_hands, future_cards_t * fc){
-    size_t size = 0;
-    char * linep = NULL;
-    deck_t ** decks = malloc(sizeof(*decks));
-
-    int n_decks = 0;
-    while(getline(&linep, &size, f) >= 0){
-        n_decks++;
-        decks = realloc(decks, n_decks * sizeof(*decks));
-        printf("line from hands: %s\n", linep);
-        decks[n_decks - 1] = hand_from_string(linep, fc);
-        //print_hand(decks[n_decks - 1]);
-        if (decks[n_decks-1] == NULL) {
-            for (int i = 0; i < n_decks-1; i++) {
-                free_deck(decks[i]);
+    if(f != NULL){
+        char* linep = NULL;
+        size_t size = 0;
+        deck_t** hands = malloc(sizeof(*hands));
+        int hand_counter = 0;
+        while(getline(&linep, &size, f) >= 0){
+            hand_counter++;
+            hands = realloc(hands, hand_counter * sizeof(hands));
+            hands[hand_counter -1] = hand_from_string((const char*)linep, fc);
+            if (hands[hand_counter-1] == NULL) {
+                for (int i = 0; i < hand_counter-1; i++) {
+                    free_deck(hands[i]);
+                }
+                free(hands);
+                free(linep);
+                hand_counter = 0;
+                return NULL;
             }
-            free(decks);
-            free(linep);
-            n_decks = 0;
-            return NULL;
+            linep = NULL;
         }
+        *n_hands = hand_counter;
+        free(linep);
+        return hands;
     }
-    *n_hands = n_decks;
-    free(linep);
-    return decks;
+    return NULL;
 }

@@ -12,11 +12,12 @@ void add_card_to(deck_t * deck, card_t c){
 }
 
 card_t * add_empty_card(deck_t * deck){
-    card_t * c = malloc(sizeof(*c));
-    c->value = 0;
-    c->suit = 0;
-    add_card_to(deck, *c);
-    return c; 
+    deck->n_cards++;
+    deck->cards = realloc(deck->cards, deck->n_cards * sizeof(*deck->cards));
+    deck->cards[deck->n_cards - 1] = malloc(sizeof(**deck->cards));
+    deck->cards[deck->n_cards - 1]->value = 0;
+    deck->cards[deck->n_cards - 1]->suit = 0;
+    return deck->cards[deck->n_cards - 1]; 
 }
 
 deck_t * make_deck_exclude(deck_t * excluded_cards){
