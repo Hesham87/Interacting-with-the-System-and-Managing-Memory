@@ -164,39 +164,40 @@ int compare_hands(deck_t * hand1, deck_t * hand2) {
 //implementation in eval-c4.o) so that the
 //other functions we have provided can make
 //use of get_match_counts.
-// unsigned * get_match_counts(deck_t * hand){
-//   unsigned * result = malloc(hand->n_cards * sizeof(*result));
-//   for(int i = 0; i < hand->n_cards; i++){
-//     result[i] = 1;
-//     for(int j = 0; j < i;j++){
-//       if(hand->cards[j]->value == hand->cards[i]->value){
-//         result[j]++;
-//         result[i] = result[j];
-//       }
-//     }
-//   }
-//   return result;
-// }
 unsigned * get_match_counts(deck_t * hand){
   unsigned * result = malloc(hand->n_cards * sizeof(*result));
-  struct hashMap* mp = (struct hashMap*)malloc(sizeof(struct hashMap));
-	initializeHashMap(mp);
   for(int i = 0; i < hand->n_cards; i++){
-    if(search(mp, hand->cards[i]->value) != -1){
-      int temp = search(mp, hand->cards[i]->value);
-      delete(mp, hand->cards[i]->value);
-      temp ++;
-      insert(mp, hand->cards[i]->value, temp);
+    result[i] = 1;
+    for(int j = 0; j < i;j++){
+      if(hand->cards[j]->value == hand->cards[i]->value){
+        result[j]++;
+        result[i] = result[j];
+      }
     }
-    else{
-      insert(mp, hand->cards[i]->value, 1);
-    }
-  }
-  for(int i = 0; i < hand->n_cards; i++){
-    result[i] = search(mp, hand->cards[i]->value);
   }
   return result;
 }
+// unsigned * get_match_counts(deck_t * hand){
+//   unsigned * result = malloc(hand->n_cards * sizeof(*result));
+//   struct hashMap* mp = (struct hashMap*)malloc(sizeof(struct hashMap));
+// 	initializeHashMap(mp);
+//   for(int i = 0; i < hand->n_cards; i++){
+//     if(search(mp, hand->cards[i]->value) != -1){
+//       int temp = search(mp, hand->cards[i]->value);
+//       delete(mp, hand->cards[i]->value);
+//       temp ++;
+//       insert(mp, hand->cards[i]->value, temp);
+//     }
+//     else{
+//       insert(mp, hand->cards[i]->value, 1);
+//     }
+//   }
+//   for(int i = 0; i < hand->n_cards; i++){
+//     result[i] = search(mp, hand->cards[i]->value);
+//   }
+//   free_map(mp);
+//   return result;
+// }
 
 // We provide the below functions.  You do NOT need to modify them
 // In fact, you should not modify them!

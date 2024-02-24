@@ -21,7 +21,7 @@ struct hashMap {
 	struct node** arr;
 };
 
-
+void free_map(struct hashMap * mp);
 void initializeHashMap(struct hashMap* mp);
 int hashFunction(struct hashMap* mp, char key);
 void insert(struct hashMap* mp, char key, int value);

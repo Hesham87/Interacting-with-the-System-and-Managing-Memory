@@ -25,8 +25,7 @@ void initializeHashMap(struct hashMap* mp)
 	mp->numOfElements = 0;
 
 	// array of size = 1
-	mp->arr = (struct node**)malloc(sizeof(struct node*)
-									* mp->capacity);
+	mp->arr = (struct node**)malloc(sizeof(struct node*) * mp->capacity);
 	return;
 }
 
@@ -147,6 +146,40 @@ int search(struct hashMap* mp, char key)
 	// char errorMssg = (char)malloc(sizeof(char) * 25);
 	// errorMssg = "Oops! No data found.\n";
 	return -1;
+}
+
+void free_map(struct hashMap * mp){
+	for(int i =0; i < mp->capacity; i++){
+		if(mp->arr[i] != NULL){
+			free(mp->arr[i]);
+		}
+	}
+	// for(int i =0; i < 10; i++){
+	// 	if(i != 1){ 
+	// 		int bucketIndex = hashFunction(mp, '0' + i);
+	// 		if(mp->arr[bucketIndex] != NULL){
+	// 			free(mp->arr[bucketIndex]);
+	// 		}	
+	// 	}	
+	// }
+	// int bucketIndex = hashFunction(mp, 'A');
+	// if(mp->arr[bucketIndex] != NULL){
+	// 	free(mp->arr[bucketIndex]);
+	// }
+	// bucketIndex = hashFunction(mp, 'K');
+	// if(mp->arr[bucketIndex] != NULL){
+	// 	free(mp->arr[bucketIndex]);
+	// }
+	// bucketIndex = hashFunction(mp, 'J');
+	// if(mp->arr[bucketIndex] != NULL){
+	// 	free(mp->arr[bucketIndex]);
+	// }
+	// bucketIndex = hashFunction(mp, 'Q');
+	// if(mp->arr[bucketIndex] != NULL){
+	// 	free(mp->arr[bucketIndex]);
+	// }
+	free(mp->arr);
+	free(mp);
 }
 
 // Drivers code

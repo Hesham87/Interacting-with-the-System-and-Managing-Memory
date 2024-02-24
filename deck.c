@@ -6,7 +6,7 @@ const int FULL_DECK_SIZE = 52;
 void add_card_to(deck_t * deck, card_t c){
     deck->n_cards++;
     deck->cards = realloc(deck->cards, deck->n_cards * sizeof(*deck->cards));
-    deck->cards[deck->n_cards - 1] = malloc(sizeof(**deck->cards));
+    deck->cards[deck->n_cards - 1] = malloc(sizeof(*deck->cards[deck->n_cards - 1]));
     deck->cards[deck->n_cards - 1]->value = c.value;
     deck->cards[deck->n_cards - 1]->suit = c.suit;
 }
@@ -14,7 +14,7 @@ void add_card_to(deck_t * deck, card_t c){
 card_t * add_empty_card(deck_t * deck){
     deck->n_cards++;
     deck->cards = realloc(deck->cards, deck->n_cards * sizeof(*deck->cards));
-    deck->cards[deck->n_cards - 1] = malloc(sizeof(**deck->cards));
+    deck->cards[deck->n_cards - 1] = malloc(sizeof(*deck->cards[deck->n_cards - 1]));
     deck->cards[deck->n_cards - 1]->value = 0;
     deck->cards[deck->n_cards - 1]->suit = 0;
     return deck->cards[deck->n_cards - 1]; 

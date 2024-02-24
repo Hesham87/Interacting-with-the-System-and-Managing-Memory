@@ -37,7 +37,7 @@ int main(int argc,char **argv){
         free(n_hands);
         return 0;
     }
-    unsigned* result = malloc((*n_hands * sizeof(*result)) + 1);
+    unsigned* result = malloc((*n_hands  + 1) * sizeof(*result));
     for(int i = 0; i <= *n_hands; i++){
         result[i] = 0;
     }
@@ -79,11 +79,16 @@ int main(int argc,char **argv){
         printf("Hand %zu won %u / %u times (%.2f%%)\n", i, result[i], num_trials, (result[i]*1.0)/num_trials);
     }
 
+    for(int i = 0; i < *n_hands; i++){
+        free_deck(hands[i]);
+    }
     free(hands);
+    free_deck(draw_deck);
     free(n_hands);
     free_future_cards(fc);
     fclose(f_hands);
     free(result);
+    return 0;
 
 
 }
